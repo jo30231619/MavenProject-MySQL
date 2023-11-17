@@ -18,15 +18,19 @@ import projects.service.ProjectService;
 public class ProjectsApp {
 	private Scanner scanner = new Scanner(System.in);
 	private ProjectService projectService = new ProjectService();
+	private Project curProject;
 
 	// @formatter:off
 	private List<String> operations = List.of(
-			"1) Add a project"
+			"1) Add a project",
+			"2) List Projects",
+			"3) Select a project"
 	);
 	// @formatter:on
 
 	/**
 	 * @param args
+	 * prints operations, get user menu selections, and performs requested operations
 	 */
 	public static void main(String[] args) {
 		new ProjectsApp().processUserSelections();
@@ -48,6 +52,14 @@ public class ProjectsApp {
 					createProject();
 					break;
 					
+				case 2:
+					listProjects();
+					break;
+					
+				case 3:
+					selectProject();
+					break;
+					
 				default:
 					System.out.println("\n" + selection + " is not a valid selection. Try again.");
 				}
@@ -59,7 +71,28 @@ public class ProjectsApp {
 	}
 
 	
+	private void selectProject() {
+		listProjects();
+		Integer projectId = getIntInput("Enter a project ID to select a project");
+		
+		curProject = null;
+		
+		curProject = projectService.fetchProjectById(projectId);
+		
+	}
 
+	private void listProjects() {
+		List<Project> projects = projectService.fetchAllProjects();
+		
+		System.out.println("\nProjects:");
+		
+		projects.forEach(project -> System.out.println("   " + project.getProjectId() + ": " + project.getProjectName()));
+		
+	}
+
+	/*
+	 * Gather user input for a row then calls the project row to create the row
+	 * */
 
 	private void createProject() {
 		String projectName = getStringInput("Enter the project name");
@@ -77,9 +110,12 @@ public class ProjectsApp {
 		project.setNotes(notes);
 		
 		Project dbProject = projectService.addProject(project);
-		System.out.println("You have successfully created project: +" + dbProject);
+		System.out.println("You have successfully created project: " + dbProject);
 	}
 	
+	/*
+	 * takes user input and converts into big Decmial
+	 * */
 	private BigDecimal getDecimalInput(String prompt) {
 		String input = getStringInput(prompt);
 		
@@ -100,6 +136,10 @@ public class ProjectsApp {
 		System.out.println("Exiting the menu.");
 		return true;
 	}
+	
+	/*
+	 * prints the menu selections, and gets the user input and converts it into an int
+	 * */
 	
 	private int getUserSelection() {
 		printOperations();
@@ -135,6 +175,13 @@ public class ProjectsApp {
 		System.out.println("\nThese are the available selections. Press the Enter key to quit:");
 		
 		operations.forEach(line -> System.out.println("  " + line));
+		
+		if(Objects.isNull(curProject)) {
+			System.out.println("\nYou are not working with a project.");
+		}
+		else {
+			System.out.println("\nYou are working with project: " + curProject);
+		}
 	}
 
 	
