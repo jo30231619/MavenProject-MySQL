@@ -46,3 +46,14 @@ CREATE TABLE project_category(
 	FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE,
 	UNIQUE KEY (project_id, category_id)
 );
+
+INSERT INTO project (project_name, estimated_hours, actual_hours, difficulty, notes) VALUES ('hang pictures', 1, 2, 1, 'use pictures from storage');
+INSERT INTO material (project_id, material_name, num_required, cost) VALUES (1, 'screws', 10, 10.00);
+INSERT INTO material (project_id, material_name, num_required, cost) VALUES(1, 'pitures, 10, 20.00');
+INSERT INTO step (project_id, step_text, step_order) VALUES(1, 'Align picture with screw', 1);
+INSERT INTO step (project_id , step_text, step_order) VALUES(1, 'screw picture to wall', 2);
+INSERT INTO category (category_id, category_name) VALUES(1, 'Pictures');
+INSERT INTO category (category_id, category_name) VALUES(2, 'Repairs');
+INSERT INTO category (category_id, category_name) VALUES(3, 'Memories');
+INSERT INTO project_category (project_id, category_id) VALUES(1, 1);
+INSERT INTO project_category (project_id, category_id) VALUES(1, 2);
